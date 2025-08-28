@@ -32,7 +32,9 @@ jobs:
       uses: astral-sh/setup-uv@v4
 
     - name: Build executable
-      run: uv run pyinstaller rotate.py --onefile --name "picture-rotation-fixer"
+      run: |
+        uv run pyinstaller rotate.py --onefile --name "picture-rotation-fixer" \
+          --add-data "$(python -c 'import cv2; print(cv2.data.haarcascades + "haarcascade_frontalface_default.xml")'):cv2/data/"
 
     - name: Rename binary for release
       shell: bash
