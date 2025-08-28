@@ -1,50 +1,66 @@
-# Auto Rotate Scanned Photos
+# 📸 Auto Rotate Scanned Photos
 
-This Python script automatically rotates scanned family photos to the correct orientation using face detection.
-It checks each image at 0°, 90°, 180°, 270° and keeps the first orientation where a face is detected upright.
+[![Build and Release Binaries](https://github.com/JustinGuese/picture-rotation-fixer/actions/workflows/build-and-release.yaml/badge.svg)](https://github.com/JustinGuese/picture-rotation-fixer/actions/workflows/build-and-release.yaml)
 
-⸻
+This tool automatically rotates scanned family photos to the correct orientation using **face detection**.  
+It evaluates each image at `0°`, `90°`, `180°`, and `270°`, then saves the first orientation where a face is detected upright.
 
-## Features
+---
 
-• Recursively scans all subfolders.
-• Supports .png, .jpg, .jpeg images.
-• Uses OpenCV’s built-in Haar cascade face detector (fast & lightweight).
-• Overwrites images in place (optional: can be changed to save in a separate folder).
-• Parallel processing with progress bar using multiprocessing and tqdm.
-• Available as a standalone binary, Homebrew formula, or Python script.
+## ✨ Features
 
-⸻
+- 🔍 Recursively scans all subfolders
+- 🖼️ Supports `.png`, `.jpg`, `.jpeg` images
+- ⚡ Uses OpenCV’s built-in Haar cascade face detector (fast & lightweight)
+- 📝 Overwrites images in place _(can be configured to save to a separate folder)_
+- 🚀 Parallel processing with a progress bar (`multiprocessing` + `tqdm`)
+- 📦 Available as:
+  - Homebrew formula (macOS)
+  - Standalone binary (Linux/Mac/Windows)
+  - Python script / package
 
-## Installation
+---
 
-### 1. Homebrew (Recommended for Mac users)
+## 📥 Installation
+
+### 1. Homebrew (Recommended for macOS)
 
 ```sh
 brew tap JustinGuese/homebrew-picture-rotation-fixer
 brew install picture-rotation-fixer
 ```
 
+---
+
 ### 2. Standalone Binary
 
-Download the latest release from [GitHub Releases](https://github.com/JustinGuese/picture-rotation-fixer/releases).
+Download the latest release from GitHub Releases.
 
-- **Linux/Mac**: Download `picture-rotation-fixer` and make it executable:
-  ```sh
-  chmod +x picture-rotation-fixer
-  ```
-- **Windows**: Download `picture-rotation-fixer.exe`.
+**Linux / macOS:**
 
-No Python installation required!
+```sh
+chmod +x picture-rotation-fixer
+./picture-rotation-fixer /path/to/photos
+```
+
+**Windows:**
+
+```sh
+picture-rotation-fixer.exe C:\path\to\photos
+```
+
+_No Python installation required!_
+
+---
 
 ### 3. Python Package
 
-1. Clone or download the repository.
+1. Clone or download the repository
 2. Install dependencies:
    ```sh
    pip install opencv-python pillow tqdm
    ```
-   Or using uv (recommended):
+   Or with uv (recommended):
    ```sh
    uv install
    ```
@@ -54,65 +70,60 @@ No Python installation required!
    ```
    This adds the `picture-rotation-fixer` command to your PATH.
 
-⸻
+---
 
-## Usage
+## ▶️ Usage
 
-### 1. Homebrew
+**Homebrew / Installed CLI:**
 
 ```sh
 picture-rotation-fixer /path/to/your/photos
 ```
 
-### 2. Standalone Binary
+**Standalone Binary:**
 
-- **Linux/Mac**:
+- Linux / macOS:
   ```sh
   ./picture-rotation-fixer /path/to/your/photos
   ```
-- **Windows**:
-  ```cmd
+- Windows:
+  ```sh
   picture-rotation-fixer.exe C:\path\to\your\photos
   ```
 
-### 3. Python
-
-If installed as a package:
-
-```sh
-picture-rotation-fixer /path/to/your/photos
-```
-
-Or run the script directly:
+**Python Script:**
 
 ```sh
 python rotate.py /path/to/your/photos
 ```
 
-If no folder is provided, it defaults to `~/LocalFiles/Scanned/Photos`.
+If no folder is provided, it defaults to:  
+`~/LocalFiles/Scanned/Photos`
 
-⸻
+---
 
-## Requirements
+## 📦 Requirements
 
-• For Python usage: Python 3.12+
-• OpenCV
-• Pillow
-• tqdm
+- Python 3.12+ (only for Python usage)
+- OpenCV
+- Pillow
+- tqdm
 
-⸻
+---
 
-## Example Output
+## 🖥️ Example Output
 
+```
 ✔ Rotated /Users/jguese/LocalFiles/Scanned/Photos/Album_1994/photo1.png to 180°
 ✔ Rotated /Users/jguese/LocalFiles/Scanned/Photos/Album_2001/photo2.png to 90°
 ⚠ No faces found in /Users/jguese/LocalFiles/Scanned/Photos/Album_1972/photo3.png, left as-is.
+```
 
-⸻
+---
 
-## Notes
+## 📝 Notes
 
-• Best for portrait photos with faces.
-• If no faces are found, the image is left untouched.
-• If you want to keep originals, modify the script to save to a Rotated/ folder instead of overwriting.
-• The script uses multiprocessing for parallel processing on multi-core systems.
+- ✅ Best suited for portrait photos with visible faces
+- ⚠ If no faces are detected, the image is left untouched
+- 💾 To keep originals, configure the script to save to a `Rotated/` folder instead of overwriting
+- 🧵 Uses multiprocessing for parallel batch processing on multi-core systems

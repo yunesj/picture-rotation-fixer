@@ -32,9 +32,16 @@ jobs:
       uses: astral-sh/setup-uv@v4
 
     - name: Build executable
+      shell: bash
       run: |
-        uv run pyinstaller rotate.py --onefile --name "picture-rotation-fixer" \
-          --add-data "$(python -c 'import cv2; print(cv2.data.haarcascades + "haarcascade_frontalface_default.xml")'):cv2/data/"
+        # Get OpenCV data path and build the add-data argument
+        if [[ "${{ matrix.os }}" == "windows-latest" ]]; then
+          CV2_DATA=$(uv run python -c "import cv2; import os; print(os.path.join(cv2.data.haarcascades, 'haarcascade_frontalface_default.xml'))")
+          uv run pyinstaller rotate.py --onefile --name "picture-rotation-fixer" --add-data "${CV2_DATA};cv2/data/"
+        else
+          CV2_DATA=$(uv run python -c "import cv2; import os; print(os.path.join(cv2.data.haarcascades, 'haarcascade_frontalface_default.xml'))")
+          uv run pyinstaller rotate.py --onefile --name "picture-rotation-fixer" --add-data "${CV2_DATA}:cv2/data/"
+        fi
 
     - name: Rename binary for release
       shell: bash
