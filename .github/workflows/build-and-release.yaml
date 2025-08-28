@@ -15,8 +15,16 @@ jobs:
         include:
         - os: ubuntu-latest
           artifact: dist/picture-rotation-fixer
+          artifact-name: picture-rotation-fixer-linux-x64
         - os: windows-latest
           artifact: dist/picture-rotation-fixer.exe
+          artifact-name: picture-rotation-fixer-windows-x64.exe
+        - os: macos-latest
+          artifact: dist/picture-rotation-fixer
+          artifact-name: picture-rotation-fixer-macos-x64
+        - os: macos-14
+          artifact: dist/picture-rotation-fixer
+          artifact-name: picture-rotation-fixer-macos-arm64
     steps:
     - uses: actions/checkout@v4
 
@@ -26,11 +34,18 @@ jobs:
     - name: Build executable
       run: uv run pyinstaller rotate.py --onefile --name "picture-rotation-fixer"
 
+    - name: Rename binary for release
+      shell: bash
+      run: |
+        if [ -f "${{ matrix.artifact }}" ]; then
+          mv "${{ matrix.artifact }}" "dist/${{ matrix.artifact-name }}"
+        fi
+
     - name: Upload artifact
       uses: actions/upload-artifact@v4
       with:
         name: ${{ matrix.os }}-binary
-        path: ${{ matrix.artifact }}
+        path: dist/${{ matrix.artifact-name }}
 
   release:
     permissions:
@@ -45,6 +60,12 @@ jobs:
       with:
         path: dist/
 
+    - name: Prepare release files
+      run: |
+        find dist/ -type f -exec mv {} dist/ \; 2>/dev/null || true
+        find dist/ -type d -empty -delete 2>/dev/null || true
+        ls -la dist/
+
     - name: Bump version and push tag
       id: tag_version
       uses: mathieudutour/github-tag-action@v6.2
@@ -55,4 +76,4 @@ jobs:
       uses: softprops/action-gh-release@v1
       with:
         tag_name: ${{ steps.tag_version.outputs.new_tag }}
-        files: dist/**
+        files: dist/*
