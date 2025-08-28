@@ -1,0 +1,58 @@
+name: Build and Release Binaries
+
+on:
+  push:
+    branches:
+    - main
+
+jobs:
+  build-linux:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Set version
+      id: vars
+      run: echo "VERSION=v0.0.${{ github.run_number }}" >> $GITHUB_ENV
+
+    - name: Build executable with PyInstaller
+      uses: sayyid5416/pyinstaller@v1
+      with:
+        python_ver: '3.12'
+        spec: 'rotate.py'
+        requirements: 'pyproject.toml'
+        upload_exe_with_name: 'picture-rotation-fixer-linux'
+        options: --onefile, --name "picture-rotation-fixer"
+
+    - name: Create Release
+      uses: softprops/action-gh-release@v1
+      with:
+        tag_name: ${{ env.VERSION }}
+        name: ${{ env.VERSION }}
+        files: dist/picture-rotation-fixer
+
+  build-windows:
+    runs-on: windows-latest
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Set version
+      id: vars
+      run: echo "VERSION=v0.0.${{ github.run_number }}" >> $GITHUB_ENV
+
+    - name: Build executable with PyInstaller
+      uses: sayyid5416/pyinstaller@v1
+      with:
+        python_ver: '3.12'
+        spec: 'rotate.py'
+        requirements: 'pyproject.toml'
+        upload_exe_with_name: 'picture-rotation-fixer-windows'
+        options: --onefile, --name "picture-rotation-fixer"
+
+    - name: Upload to GitHub Release
+      uses: softprops/action-gh-release@v1
+      with:
+        tag_name: ${{ env.VERSION }}
+        files: dist/picture-rotation-fixer.exe

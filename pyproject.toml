@@ -1,0 +1,19 @@
+[project]
+name = "picturerotationfixer"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "opencv-python>=4.12.0.88",
+    "pillow>=11.3.0",
+    "tqdm>=4.67.1",
+]
+
+[project.scripts]
+picture-rotation-fixer = "rotate:process_directory"
+
+[dependency-groups]
+dev = [
+    "pyinstaller>=6.15.0",
+]
