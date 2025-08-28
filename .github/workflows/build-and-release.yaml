@@ -18,6 +18,9 @@ jobs:
     - name: Export requirements
       run: uv export --format requirements-txt --output-file requirements.txt
 
+    - name: Install dependencies
+      run: uv pip install --system -r requirements.txt
+
     - name: Set version
       id: vars
       run: echo "VERSION=v0.0.${{ github.run_number }}" >> $GITHUB_ENV
@@ -27,7 +30,6 @@ jobs:
       with:
         python_ver: '3.12'
         spec: 'rotate.py'
-        requirements: 'requirements.txt'
         upload_exe_with_name: 'picture-rotation-fixer-linux'
         options: --onefile, --name "picture-rotation-fixer"
 
@@ -50,6 +52,9 @@ jobs:
     - name: Export requirements
       run: uv export --format requirements-txt --output-file requirements.txt
 
+    - name: Install dependencies
+      run: uv pip install --system -r requirements.txt
+
     - name: Set version
       id: vars
       run: echo "VERSION=v0.0.${{ github.run_number }}" >> $GITHUB_ENV
@@ -59,7 +64,6 @@ jobs:
       with:
         python_ver: '3.12'
         spec: 'rotate.py'
-        requirements: 'requirements.txt'
         upload_exe_with_name: 'picture-rotation-fixer-windows'
         options: --onefile, --name "picture-rotation-fixer"
 
