@@ -16,35 +16,20 @@ jobs:
         - os: windows-latest
           artifact: dist/picture-rotation-fixer.exe
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
-
-    - name: Set up Python
-      uses: actions/setup-python@v4
-      with:
-        python-version: '3.12'
+    - uses: actions/checkout@v4
 
     - name: Install uv
-      run: pip install uv
-
-    - name: Export requirements
-      run: uv export --format requirements-txt --output-file requirements.txt
-
-    - name: Create uv virtual environment
-      run: uv venv .venv
-
-    - name: Install dependencies
-      run: uv pip install -r requirements.txt
-
-    - name: Set version
-      id: vars
-      run: echo "VERSION=v0.0.${{ github.run_number }}" >> $GITHUB_ENV
+      uses: astral-sh/setup-uv@v4
 
     - name: Build executable
       run: uv run pyinstaller rotate.py --onefile --name "picture-rotation-fixer"
 
+    - name: Bump version and push tag
+      id: tag_version
+      uses: mathieudutour/github-tag-action@v6.2
+
     - name: Upload to GitHub Release
       uses: softprops/action-gh-release@v1
       with:
-        tag_name: ${{ env.VERSION }}
+        tag_name: ${{ steps.tag_version.outputs.new_tag }}
         files: ${{ matrix.artifact }}
