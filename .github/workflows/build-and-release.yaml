@@ -30,12 +30,8 @@ jobs:
       id: vars
       run: echo "VERSION=v0.0.${{ github.run_number }}" >> $GITHUB_ENV
 
-    - name: Build executable with PyInstaller
-      uses: sayyid5416/pyinstaller@v1
-      with:
-        spec: 'rotate.py'
-        upload_exe_with_name: 'picture-rotation-fixer-linux'
-        options: --onefile, --name "picture-rotation-fixer"
+    - name: Build executable
+      run: uv run pyinstaller rotate.py --onefile --name "picture-rotation-fixer"
 
     - name: Create Release
       uses: softprops/action-gh-release@v1
@@ -68,12 +64,8 @@ jobs:
       id: vars
       run: echo "VERSION=v0.0.${{ github.run_number }}" >> $GITHUB_ENV
 
-    - name: Build executable with PyInstaller
-      uses: sayyid5416/pyinstaller@v1
-      with:
-        spec: 'rotate.py'
-        upload_exe_with_name: 'picture-rotation-fixer-windows'
-        options: --onefile, --name "picture-rotation-fixer"
+    - name: Build executable
+      run: uv run pyinstaller rotate.py --onefile --name "picture-rotation-fixer"
 
     - name: Upload to GitHub Release
       uses: softprops/action-gh-release@v1
