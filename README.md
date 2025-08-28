@@ -12,70 +12,70 @@ It checks each image at 0°, 90°, 180°, 270° and keeps the first orientation 
 • Uses OpenCV’s built-in Haar cascade face detector (fast & lightweight).
 • Overwrites images in place (optional: can be changed to save in a separate folder).
 • Parallel processing with progress bar using multiprocessing and tqdm.
-• Available as a standalone binary or Python script.
+• Available as a standalone binary, Homebrew formula, or Python script.
 
 ⸻
 
 ## Installation
 
-### Option 1: Standalone Binary (Recommended for End Users)
+### 1. Homebrew (Recommended for Mac users)
 
-Download the latest release from [GitHub Releases](https://github.com/yourusername/pictureRotationFixer/releases).
+```sh
+brew tap JustinGuese/picture-rotation-fixer
+brew install picture-rotation-fixer
+```
+
+### 2. Standalone Binary
+
+Download the latest release from [GitHub Releases](https://github.com/JustinGuese/picture-rotation-fixer/releases).
 
 - **Linux/Mac**: Download `picture-rotation-fixer` and make it executable:
-
   ```sh
   chmod +x picture-rotation-fixer
   ```
-
 - **Windows**: Download `picture-rotation-fixer.exe`.
 
 No Python installation required!
 
-### Option 2: Python Package
+### 3. Python Package
 
 1. Clone or download the repository.
 2. Install dependencies:
-
    ```sh
    pip install opencv-python pillow tqdm
    ```
-
    Or using uv (recommended):
-
    ```sh
    uv install
    ```
-
 3. (Optional) Install as a CLI tool:
-
    ```sh
    pip install .
    ```
-
    This adds the `picture-rotation-fixer` command to your PATH.
 
 ⸻
 
 ## Usage
 
-### Binary Usage
+### 1. Homebrew
 
-Run the downloaded binary with the folder path as an argument:
+```sh
+picture-rotation-fixer /path/to/your/photos
+```
 
-- **Linux**:
+### 2. Standalone Binary
 
+- **Linux/Mac**:
   ```sh
   ./picture-rotation-fixer /path/to/your/photos
   ```
-
 - **Windows**:
-
   ```cmd
-  picture-rotation-fixer.exe C:\path	o\your\photos
+  picture-rotation-fixer.exe C:\path\to\your\photos
   ```
 
-### Python Usage
+### 3. Python
 
 If installed as a package:
 
