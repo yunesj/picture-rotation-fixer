@@ -21,7 +21,7 @@ It checks each image at 0°, 90°, 180°, 270° and keeps the first orientation 
 ### 1. Homebrew (Recommended for Mac users)
 
 ```sh
-brew tap JustinGuese/picture-rotation-fixer
+brew tap JustinGuese/homebrew-picture-rotation-fixer
 brew install picture-rotation-fixer
 ```
 
