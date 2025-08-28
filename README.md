@@ -1,9 +1,25 @@
-# 📸 Auto Rotate Scanned Photos
+# 📸 picture-rotation-fixer
+
+## ✨ Features
+
+- 🎯 **Intelligent Detection**: Cascading approach for maximum compatibility
+  - 👤 **Face Detection First**: Uses OpenCV's Haar cascade for fast face detection
+  - 🎨 **Object Detection Fallback**: Uses YOLOv8 for general object detection when no faces found
+- 🔍 Recursively scans all subfolders
+- 🖼️ Supports `.png`, `.jpg`, `.jpeg` images
+- ⚡ Fast & lightweight with smart fallbacks
+- 📝 Overwrites images in place _(preserves original if no rotation needed)_
+- 🚀 Parallel processing with progress bar (`multiprocessing` + `tqdm`)
+- 📦 Available as:
+  - Homebrew formula (macOS)
+  - Standalone binary (Linux/Mac/Windows)
+  - Python script / packagened Photos
 
 [![Build and Release Binaries](https://github.com/JustinGuese/picture-rotation-fixer/actions/workflows/build-and-release.yaml/badge.svg)](https://github.com/JustinGuese/picture-rotation-fixer/actions/workflows/build-and-release.yaml)
 
-This tool automatically rotates scanned family photos to the correct orientation using **face detection**.  
-It evaluates each image at `0°`, `90°`, `180°`, and `270°`, then saves the first orientation where a face is detected upright.
+This tool automatically rotates scanned family photos to the correct orientation using **intelligent detection**.  
+It uses a cascading approach: first tries **face detection**, then falls back to **object detection** if no faces are found.  
+For each image, it evaluates orientations at `0°`, `90°`, `180°`, and `270°`, then saves the first orientation where content is detected upright.
 
 ---
 
@@ -57,17 +73,23 @@ _No Python installation required!_
 
 1. Clone or download the repository
 2. Install dependencies:
+
    ```sh
-   pip install opencv-python pillow tqdm
+   pip install opencv-python pillow tqdm ultralytics
    ```
+
    Or with uv (recommended):
+
    ```sh
    uv install
    ```
+
 3. (Optional) Install as a CLI tool:
+
    ```sh
    pip install .
    ```
+
    This adds the `picture-rotation-fixer` command to your PATH.
 
 ---
@@ -83,10 +105,13 @@ picture-rotation-fixer /path/to/your/photos
 **Standalone Binary:**
 
 - Linux / macOS:
+
   ```sh
   ./picture-rotation-fixer /path/to/your/photos
   ```
+
 - Windows:
+
   ```sh
   picture-rotation-fixer.exe C:\path\to\your\photos
   ```
@@ -105,9 +130,10 @@ If no folder is provided, it defaults to:
 ## 📦 Requirements
 
 - Python 3.12+ (only for Python usage)
-- OpenCV
-- Pillow
-- tqdm
+- OpenCV (face detection)
+- Pillow (image processing)
+- tqdm (progress bars)
+- ultralytics (YOLOv8 object detection)
 
 ---
 

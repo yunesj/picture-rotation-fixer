@@ -8,6 +8,7 @@ dependencies = [
     "opencv-python>=4.12.0.88",
     "pillow>=11.3.0",
     "tqdm>=4.67.1",
+    "ultralytics>=8.3.0",
 ]
 
 [project.scripts]
@@ -16,4 +17,22 @@ picture-rotation-fixer = "rotate:process_directory"
 [dependency-groups]
 dev = [
     "pyinstaller>=6.15.0",
+    "pytest>=8.3.0",
+    "pytest-cov>=6.0.0",
+    "pytest-mock>=3.12.0",
+]
+
+[tool.pytest.ini_options]
+minversion = "8.0"
+addopts = "-ra -q --tb=short"
+testpaths = [
+    ".",
+]
+python_files = [
+    "test_*.py",
+    "*_test.py",
+]
+filterwarnings = [
+    "ignore::UserWarning:ultralytics.*:",
+    "ignore::DeprecationWarning",
 ]
