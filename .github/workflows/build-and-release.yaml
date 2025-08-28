@@ -6,8 +6,15 @@ on:
     - main
 
 jobs:
-  build-linux:
-    runs-on: ubuntu-latest
+  build:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        include:
+        - os: ubuntu-latest
+          artifact: dist/picture-rotation-fixer
+        - os: windows-latest
+          artifact: dist/picture-rotation-fixer.exe
     steps:
     - name: Checkout code
       uses: actions/checkout@v4
@@ -23,39 +30,8 @@ jobs:
     - name: Export requirements
       run: uv export --format requirements-txt --output-file requirements.txt
 
-    - name: Install dependencies
-      run: uv pip install -r requirements.txt
-
-    - name: Set version
-      id: vars
-      run: echo "VERSION=v0.0.${{ github.run_number }}" >> $GITHUB_ENV
-
-    - name: Build executable
-      run: uv run pyinstaller rotate.py --onefile --name "picture-rotation-fixer"
-
-    - name: Create Release
-      uses: softprops/action-gh-release@v1
-      with:
-        tag_name: ${{ env.VERSION }}
-        name: ${{ env.VERSION }}
-        files: dist/picture-rotation-fixer
-
-  build-windows:
-    runs-on: windows-latest
-    steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
-
-    - name: Set up Python
-      uses: actions/setup-python@v4
-      with:
-        python-version: '3.12'
-
-    - name: Install uv
-      run: pip install uv
-
-    - name: Export requirements
-      run: uv export --format requirements-txt --output-file requirements.txt
+    - name: Create uv virtual environment
+      run: uv venv .venv
 
     - name: Install dependencies
       run: uv pip install -r requirements.txt
@@ -71,4 +47,4 @@ jobs:
       uses: softprops/action-gh-release@v1
       with:
         tag_name: ${{ env.VERSION }}
-        files: dist/picture-rotation-fixer.exe
+        files: ${{ matrix.artifact }}
