@@ -12,6 +12,11 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v4
 
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.12'
+
     - name: Install uv
       run: pip install uv
 
@@ -19,7 +24,7 @@ jobs:
       run: uv export --format requirements-txt --output-file requirements.txt
 
     - name: Install dependencies
-      run: uv pip install --system -r requirements.txt
+      run: uv pip install -r requirements.txt
 
     - name: Set version
       id: vars
@@ -28,7 +33,6 @@ jobs:
     - name: Build executable with PyInstaller
       uses: sayyid5416/pyinstaller@v1
       with:
-        python_ver: '3.12'
         spec: 'rotate.py'
         upload_exe_with_name: 'picture-rotation-fixer-linux'
         options: --onefile, --name "picture-rotation-fixer"
@@ -46,6 +50,11 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v4
 
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.12'
+
     - name: Install uv
       run: pip install uv
 
@@ -53,7 +62,7 @@ jobs:
       run: uv export --format requirements-txt --output-file requirements.txt
 
     - name: Install dependencies
-      run: uv pip install --system -r requirements.txt
+      run: uv pip install -r requirements.txt
 
     - name: Set version
       id: vars
@@ -62,7 +71,6 @@ jobs:
     - name: Build executable with PyInstaller
       uses: sayyid5416/pyinstaller@v1
       with:
-        python_ver: '3.12'
         spec: 'rotate.py'
         upload_exe_with_name: 'picture-rotation-fixer-windows'
         options: --onefile, --name "picture-rotation-fixer"
