@@ -34,26 +34,70 @@ jobs:
     - name: Build executable
       shell: bash
       run: |
-        # Pre-download YOLO model to ensure it's available for bundling
-        uv run python -c "from ultralytics import YOLO; YOLO('yolo11n.pt')"
-
+        # Pre-download YOLO model and copy to working directory
+        uv run python -c "
+        import os
+        from ultralytics import YOLO
+        import shutil
+        
+        # Download model 
+        model = YOLO('yolo11n.pt')
+        
+        # Try to find and copy the model file to current directory
+        model_paths = [
+            'yolo11n.pt',  # If already in current dir
+            os.path.expanduser('~/.cache/torch/hub/ultralytics_yolov5_master/yolo11n.pt'),
+            os.path.expanduser('~/Library/Application Support/Ultralytics/weights/yolo11n.pt'),  # macOS
+            os.path.expanduser('~/.ultralytics/weights/yolo11n.pt'),  # Linux
+            os.path.expanduser('~/AppData/Roaming/Ultralytics/weights/yolo11n.pt'),  # Windows
+        ]
+        
+        copied = False
+        for path in model_paths:
+            if os.path.exists(path) and path != 'yolo11n.pt':
+                shutil.copy2(path, 'yolo11n.pt')
+                print(f'Copied model from {path} to yolo11n.pt')
+                copied = True
+                break
+        
+        if not copied and not os.path.exists('yolo11n.pt'):
+            print('Warning: Could not locate YOLO model file')
+        else:
+            print(f'YOLO model ready at: {os.path.abspath(\"yolo11n.pt\")}')
+        "
+        
         # Get OpenCV data path
         CV2_DATA=$(uv run python -c "import cv2; import os; print(os.path.join(cv2.data.haarcascades, 'haarcascade_frontalface_default.xml'))")
-
-        # Get YOLO model path (downloaded to current directory)
-        YOLO_MODEL=$(pwd)/yolo11n.pt
-
-        # Build with both OpenCV and YOLO data
+        
+        # Build executable (YOLO model bundling is conditional)
         if [[ "${{ matrix.os }}" == "windows-latest" ]]; then
-          uv run pyinstaller rotate.py --onefile --name "picture-rotation-fixer" \
-            --add-data "${CV2_DATA};cv2/data/" \
-            --add-data "${YOLO_MODEL};." \
-            --hidden-import=ultralytics
+          if [ -f "yolo11n.pt" ]; then
+            uv run pyinstaller rotate.py --onefile --name "picture-rotation-fixer" \
+              --add-data "${CV2_DATA};cv2/data/" \
+              --add-data "yolo11n.pt;." \
+              --hidden-import=ultralytics \
+              --hidden-import=ultralytics.models \
+              --hidden-import=ultralytics.utils
+          else
+            echo "Building without YOLO model bundle"
+            uv run pyinstaller rotate.py --onefile --name "picture-rotation-fixer" \
+              --add-data "${CV2_DATA};cv2/data/" \
+              --hidden-import=ultralytics
+          fi
         else
-          uv run pyinstaller rotate.py --onefile --name "picture-rotation-fixer" \
-            --add-data "${CV2_DATA}:cv2/data/" \
-            --add-data "${YOLO_MODEL}:." \
-            --hidden-import=ultralytics
+          if [ -f "yolo11n.pt" ]; then
+            uv run pyinstaller rotate.py --onefile --name "picture-rotation-fixer" \
+              --add-data "${CV2_DATA}:cv2/data/" \
+              --add-data "yolo11n.pt:." \
+              --hidden-import=ultralytics \
+              --hidden-import=ultralytics.models \
+              --hidden-import=ultralytics.utils
+          else
+            echo "Building without YOLO model bundle"
+            uv run pyinstaller rotate.py --onefile --name "picture-rotation-fixer" \
+              --add-data "${CV2_DATA}:cv2/data/" \
+              --hidden-import=ultralytics
+          fi
         fi
 
     - name: Rename binary for release
