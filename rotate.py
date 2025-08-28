@@ -53,6 +53,9 @@ def process_directory(root_dir):
 
 
 if __name__ == "__main__":
+    from multiprocessing import freeze_support
+
+    freeze_support()
     parser = argparse.ArgumentParser(
         description="Auto-rotate scanned photos using face detection."
     )
