@@ -37,20 +37,22 @@ jobs:
         # Pre-download YOLO model to ensure it's available for bundling
         uv run python -c "from ultralytics import YOLO; YOLO('yolo11n.pt')"
 
-        # Get OpenCV data path and YOLO cache path
+        # Get OpenCV data path
         CV2_DATA=$(uv run python -c "import cv2; import os; print(os.path.join(cv2.data.haarcascades, 'haarcascade_frontalface_default.xml'))")
-        YOLO_CACHE=$(uv run python -c "from ultralytics.utils import USER_CONFIG_DIR; import os; print(os.path.join(USER_CONFIG_DIR, 'weights'))")
+
+        # Get YOLO model path (downloaded to current directory)
+        YOLO_MODEL=$(pwd)/yolo11n.pt
 
         # Build with both OpenCV and YOLO data
         if [[ "${{ matrix.os }}" == "windows-latest" ]]; then
           uv run pyinstaller rotate.py --onefile --name "picture-rotation-fixer" \
             --add-data "${CV2_DATA};cv2/data/" \
-            --add-data "${YOLO_CACHE};ultralytics/weights/" \
+            --add-data "${YOLO_MODEL};." \
             --hidden-import=ultralytics
         else
           uv run pyinstaller rotate.py --onefile --name "picture-rotation-fixer" \
             --add-data "${CV2_DATA}:cv2/data/" \
-            --add-data "${YOLO_CACHE}:ultralytics/weights/" \
+            --add-data "${YOLO_MODEL}:." \
             --hidden-import=ultralytics
         fi
 
