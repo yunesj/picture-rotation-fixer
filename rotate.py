@@ -153,7 +153,7 @@ def process_directory(root_dir):
     print("Detection strategy: Face detection first, object detection as fallback")
 
     # Process images with multiprocessing
-    with Pool(cpu_count()) as pool:
+    with Pool(cpu_count(), initializer=init_worker) as pool:
         list(
             tqdm(
                 pool.imap_unordered(process_single_image, image_paths),
@@ -164,6 +164,12 @@ def process_directory(root_dir):
 
     print("Processing complete!")
 
+def init_worker():
+    logging.basicConfig(
+        level=logging.DEBUG,
+        format=f"[%(processName)s] %(levelname)s: %(message)s",
+        force=True
+    )
 
 if __name__ == "__main__":
     from multiprocessing import freeze_support
